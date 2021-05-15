@@ -52,7 +52,7 @@ public class ClientListener extends SessionAdapter {
                 String serverHash = new BigInteger(CryptUtil.getServerIdHash(packet.getServerId(), packet.getPublicKey(), key)).toString(16);
                 String accessToken = event.getSession().getFlag(MinecraftConstants.ACCESS_TOKEN_KEY);
                 try {
-                    new SessionService(proxy).joinServer(profile, accessToken, serverHash);
+                    new SessionService().joinServer(profile, accessToken, serverHash);
                 } catch(ServiceUnavailableException e) {
                     event.getSession().disconnect("Login failed: Authentication service unavailable.", e);
                     return;

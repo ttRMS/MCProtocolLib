@@ -190,7 +190,7 @@ public class MinecraftProtocol extends PacketProtocol {
     private MinecraftProtocol(String username, String clientToken, String using, boolean token, Proxy authProxy) throws RequestException {
         this(SubProtocol.LOGIN);
 
-        AuthenticationService auth = new AuthenticationService(clientToken, authProxy);
+        AuthenticationService auth = new AuthenticationService(clientToken);
         auth.setUsername(username);
         if(token) {
             auth.setAccessToken(using);

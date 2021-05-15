@@ -179,7 +179,7 @@ public class ServerListener extends SessionAdapter {
                 }
 
                 try {
-                    profile = new SessionService(proxy).getProfileByServer(username, new BigInteger(CryptUtil.getServerIdHash(serverId, KEY_PAIR.getPublic(), this.key)).toString(16));
+                    profile = new SessionService().getProfileByServer(username, new BigInteger(CryptUtil.getServerIdHash(serverId, KEY_PAIR.getPublic(), this.key)).toString(16));
                 } catch(RequestException e) {
                     this.session.disconnect("Failed to make session service request.", e);
                     return;
