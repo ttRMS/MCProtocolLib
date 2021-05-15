@@ -26,7 +26,7 @@ public class AutoAuthenticationService extends AuthenticationService {
      * @param clientToken Azure client token used for Microsoft Authentication
      */
     public AutoAuthenticationService(String clientToken) {
-        super(URI.create(""));
+        super(clientToken, URI.create(""));
         this.mojangAuth = new MojangAuthenticationService(clientToken);
         this.msaAuth = new MsaAuthenticationService(clientToken);
     }
