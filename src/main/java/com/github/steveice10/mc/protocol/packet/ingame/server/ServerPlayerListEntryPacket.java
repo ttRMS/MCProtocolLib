@@ -10,6 +10,8 @@ import com.github.steveice10.packetlib.io.NetInput;
 import com.github.steveice10.packetlib.io.NetOutput;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class ServerPlayerListEntryPacket extends MinecraftPacket {
@@ -50,6 +52,7 @@ public class ServerPlayerListEntryPacket extends MinecraftPacket {
             switch(this.action) {
                 case ADD_PLAYER:
                     int properties = in.readVarInt();
+                    List<GameProfile.Property> propertyList = new ArrayList<>(); // TTRMS
                     for(int index = 0; index < properties; index++) {
                         String propertyName = in.readString();
                         String value = in.readString();
@@ -58,11 +61,14 @@ public class ServerPlayerListEntryPacket extends MinecraftPacket {
                             signature = in.readString();
                         }
 
-                        profile.getProperties().add(new GameProfile.Property(propertyName, value, signature));
+                        //profile.getProperties().add(new GameProfile.Property(propertyName, value, signature)); // TTRMS
+                        propertyList.add(new GameProfile.Property(propertyName, value, signature)); // TTRMS
                     }
 
+                    profile.setProperties(propertyList); // TTRMS
+
                     int g = in.readVarInt();
-                    GameMode gameMode = MagicValues.key(GameMode.class, g < 0 ? 0 : g);
+                    GameMode gameMode = MagicValues.key(GameMode.class, Math.max(g, 0));
                     int ping = in.readVarInt();
                     String displayName = null;
                     if(in.readBoolean()) {
@@ -73,7 +79,7 @@ public class ServerPlayerListEntryPacket extends MinecraftPacket {
                     break;
                 case UPDATE_GAMEMODE:
                     g = in.readVarInt();
-                    GameMode mode = MagicValues.key(GameMode.class, g < 0 ? 0 : g);
+                    GameMode mode = MagicValues.key(GameMode.class, Math.max(g, 0));
                     entry = new PlayerListEntry(profile, mode);
                     break;
                 case UPDATE_LATENCY:
