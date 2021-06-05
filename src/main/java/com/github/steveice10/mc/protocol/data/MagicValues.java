@@ -202,6 +202,7 @@ public class MagicValues {
         register(MoveToHotbarParam.SLOT_8, 7);
         register(MoveToHotbarParam.SLOT_9, 8);
 
+        register(CreativeGrabParam.GRAB, 0); // TTRMS
         register(CreativeGrabParam.GRAB, 2);
 
         register(DropItemParam.LEFT_CLICK_OUTSIDE_NOT_HOLDING, 0);
