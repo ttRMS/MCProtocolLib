@@ -267,6 +267,7 @@ public class NetUtil {
         if((in.available() > 0 || ex != null) && !hasSkylight) {
             return readColumn(data, x, z, fullChunk, true, mask, tileEntities);
         } else if(ex != null) {
+            ex.printStackTrace(); // TTRMS
             throw new IOException("Failed to read chunk data.", ex);
         }
 

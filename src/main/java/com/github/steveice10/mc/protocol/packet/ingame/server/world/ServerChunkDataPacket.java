@@ -38,7 +38,11 @@ public class ServerChunkDataPacket extends MinecraftPacket {
             tileEntities[i] = NetUtil.readNBT(in);
         }
 
-        this.column = NetUtil.readColumn(data, x, z, fullChunk, false, chunkMask, tileEntities);
+        try { // TTRMS (the whole try/catch)
+            this.column = NetUtil.readColumn(data, x, z, fullChunk, false, chunkMask, tileEntities);
+        } catch (Exception ex) {
+            System.out.println("Oofplux moment (then cap w/ k wtfff");
+        }
     }
 
     @Override
