@@ -40,6 +40,10 @@ public class AutoAuthenticationService extends AuthenticationService {
         return this.authType == AuthType.Mojang ? mojangAuth : msaAuth;
     }
 
+    public AuthType getAuthType() {
+        return this.authType;
+    }
+
     @Override
     public String getAccessToken() {
         return this.getAuth().getAccessToken();
