@@ -10,12 +10,12 @@
 
     <name>MCProtocolLib</name>
     <description>A library for communicating with a Minecraft client or server.</description>
-    <url>http://github.com/Steveice10/MCProtocolLib/</url>
+    <url>http://github.com/GeyserMC/MCProtocolLib/</url>
 
     <scm>
-        <connection>scm:git:git@github.com:Steveice10/MCProtocolLib.git</connection>
-        <developerConnection>scm:git:git@github.com:Steveice10/MCProtocolLib.git</developerConnection>
-        <url>git@github.com:Steveice10/MCProtocolLib/</url>
+        <connection>scm:git:git@github.com:GeyserMC/MCProtocolLib.git</connection>
+        <developerConnection>scm:git:git@github.com:GeyserMC/MCProtocolLib.git</developerConnection>
+        <url>git@github.com:GeyserMC/MCProtocolLib/</url>
     </scm>
 
     <properties>
@@ -42,7 +42,7 @@
 
     <issueManagement>
         <system>GitHub</system>
-        <url>https://github.com/Steveice10/MCProtocolLib/issues</url>
+        <url>https://github.com/GeyserMC/MCProtocolLib/issues</url>
     </issueManagement>
 
     <repositories>
@@ -54,21 +54,23 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.github.steveice10</groupId>
-            <artifactId>opennbt</artifactId>
+            <groupId>com.github.GeyserMC</groupId>
+            <artifactId>OpenNBT</artifactId>
             <version>1.3</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.steveice10</groupId>
-            <artifactId>packetlib</artifactId>
+            <groupId>com.github.GeyserMC</groupId>
+            <artifactId>PacketLib</artifactId>
             <version>2.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.steveice10</groupId>
-            <artifactId>mcauthlib</artifactId>
-            <version>1.3</version>
+            <groupId>com.github.GeyserMC</groupId>
+            <artifactId>MCAuthLib</artifactId>
+            <version>cf0d4e3200</version>
+            <!-- Version is commit-specific. That commit is where Steveice10 merged Geyser's MS auth branch. -->
+            <!-- https://github.com/GeyserMC/MCAuthLib/commit/cf0d4e3200842be319c04bf758f67df40684495c -->
             <scope>compile</scope>
         </dependency>
         <dependency>
