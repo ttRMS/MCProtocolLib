@@ -11,45 +11,30 @@ Huge thanks to these wonderful people/groups for getting us to where we are toda
 - [@DaMatrix](https://github.com/DaMatrix)
 - [@GeyserMC](https://github.com/GeyserMC)
 
-## Example Code
-See [example/com/github/steveice10/mc/protocol/test/MinecraftProtocolTest.java](https://github.com/Steveice10/MCProtocolLib/tree/master/example/com/github/steveice10/mc/protocol/test)
-
 ## Adding as a Dependency
 
-The recommended way of fetching MCProtocolLib is through jitpack.io. See [here](https://jitpack.io/#Steveice10/MCProtocolLib) for more details on how to include MCProtocolLib in your project.
+The recommended way of fetching MCProtocolLib is through [JitPack](https://jitpack.io/).
 
-Maven:
-```xml
-<repositories>
-    <repository>
-        <id>jitpack.io</id>
-        <url>https://jitpack.io</url>
-    </repository>
-</repositories>
+`build.gradle`:
 
-<dependency>
-    <groupId>com.github.Steveice10</groupId>
-    <artifactId>MCProtocolLib</artifactId>
-    <version>(version here)</version>
-</dependency>
-```
-
-Gradle:
 ```groovy
-allprojects {
-    repositories {
-        maven { url 'https://jitpack.io' }
-    }
+repositories {
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
-    implementation 'com.github.Steveice10:MCProtocolLib:(version here)'
+    implementation 'com.github.ttrms:mcprotocollib:ttrms-SNAPSHOT'
 }
 ```
 
+## Example Code
+
+See [example usage here](https://github.com/ttRMS/MCProtocolLib/blob/ttrms/example/com/github/steveice10/mc/protocol/test/MinecraftProtocolTest.java).
+
 ## Building the Source
-MCProtocolLib uses Maven to manage dependencies. Simply run 'mvn clean install' in the source's directory.
+
+MCProtocolLib uses Maven to manage dependencies. Simply run `mvn clean install` in the project root.
 
 ## License
-MCProtocolLib is licensed under the **[MIT license](http://www.opensource.org/licenses/mit-license.html)**.
 
+MCProtocolLib is licensed under the **[MIT license](http://www.opensource.org/licenses/mit-license.html)**.
