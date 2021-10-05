@@ -1,14 +1,9 @@
-package com.github.steveice10.mc.protocol.packet.ingame.server;
+package com.github.steveice10.mc.protocol.packet.ingame.server.title;
 
 import com.github.steveice10.packetlib.io.NetInput;
 import com.github.steveice10.packetlib.io.NetOutput;
 import com.github.steveice10.packetlib.packet.Packet;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.With;
+import lombok.*;
 
 import java.io.IOException;
 
@@ -17,21 +12,21 @@ import java.io.IOException;
 @Setter(AccessLevel.NONE)
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @AllArgsConstructor
-public class ServerSetCompressionPacket implements Packet {
-    private int threshold;
+public class ServerClearTitlesPacket implements Packet {
+    private boolean resetTimes;
 
     @Override
     public void read(NetInput in) throws IOException {
-        this.threshold = in.readVarInt();
+        this.resetTimes = in.readBoolean();
     }
 
     @Override
     public void write(NetOutput out) throws IOException {
-        out.writeVarInt(this.threshold);
+        out.writeBoolean(this.resetTimes);
     }
 
     @Override
     public boolean isPriority() {
-        return true;
+        return false;
     }
 }
