@@ -35,6 +35,10 @@ See [example usage here](https://github.com/ttRMS/MCProtocolLib/blob/ttrms/examp
 
 MCProtocolLib uses Maven to manage dependencies. Simply run `mvn clean install` in the project root.
 
+## Support and development
+
+Please join us at https://discord.gg/geysermc under #mcprotocollib for discussion and support for this project.
+
 ## License
 
 MCProtocolLib is licensed under the **[MIT license](http://www.opensource.org/licenses/mit-license.html)**.
