@@ -1,7 +1,6 @@
 package com.github.steveice10.mc.protocol;
 
 import com.github.steveice10.mc.auth.data.GameProfile;
-import com.github.steveice10.mc.auth.exception.request.InvalidCredentialsException;
 import com.github.steveice10.mc.auth.exception.request.RequestException;
 import com.github.steveice10.mc.auth.service.AuthenticationService;
 import com.github.steveice10.mc.auth.service.MojangAuthenticationService;
@@ -14,10 +13,10 @@ import java.util.List;
  * Automatically signs in with either Mojang or Microsoft authentication
  */
 public class AutoAuthenticationService extends AuthenticationService {
-    private String username;
-    private String password;
     private final MojangAuthenticationService mojangAuth;
     private final MsaAuthenticationService msaAuth;
+    private String username;
+    private String password;
     private AuthType authType;
 
     /**
@@ -26,7 +25,7 @@ public class AutoAuthenticationService extends AuthenticationService {
      * @param clientToken Azure client token used for Microsoft Authentication
      */
     public AutoAuthenticationService(String clientToken) {
-        super(clientToken, URI.create(""));
+        super(URI.create(""));
         this.mojangAuth = new MojangAuthenticationService(clientToken);
         this.msaAuth = new MsaAuthenticationService(clientToken);
     }
@@ -109,7 +108,7 @@ public class AutoAuthenticationService extends AuthenticationService {
             this.mojangAuth.login();
             this.authType = AuthType.Mojang;
             System.out.println("[AutoAuthService] Authenticated using: Mojang");
-        } catch (InvalidCredentialsException ex) {
+        } catch (Exception ex) {
             // If it fails, attempt Microsoft
             System.out.println("[AutoAuthService] Mojang authentication failed! Attempting Microsoft authentication...");
             this.msaAuth.setUsername(this.username);
@@ -117,6 +116,26 @@ public class AutoAuthenticationService extends AuthenticationService {
             this.msaAuth.login();
             this.authType = AuthType.Microsoft;
             System.out.println("[AutoAuthService] Authenticated using: Microsoft");
+        }
+    }
+
+    public void loginMsFirst() throws RequestException {
+        try {
+            // If it fails, attempt Microsoft
+            System.out.println("[AutoAuthService] Attempting Microsoft authentication...");
+            this.msaAuth.setUsername(this.username.replace("ms:", ""));
+            this.msaAuth.setPassword(this.password);
+            this.msaAuth.login();
+            this.authType = AuthType.Microsoft;
+            System.out.println("[AutoAuthService] Authenticated using: Microsoft");
+        } catch (Exception ex) {
+            // First attempt Mojang auth
+            System.out.println("[AutoAuthService] Microsoft authentication failed! Attempting Mojang authentication...");
+            this.mojangAuth.setUsername(this.username.replace("ms:", ""));
+            this.mojangAuth.setPassword(this.password);
+            this.mojangAuth.login();
+            this.authType = AuthType.Mojang;
+            System.out.println("[AutoAuthService] Authenticated using: Mojang");
         }
     }
 
