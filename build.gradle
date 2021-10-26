@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com.github.steveice10'
-version = '1.17.1-TT-1'
+version = '1.17.1-TT-2'
 description = 'MCProtocolLib'
 
 repositories {
@@ -17,6 +17,7 @@ repositories {
     maven {
         url = uri('https://repo.maven.apache.org/maven2/')
     }
+    mavenCentral()
 }
 
 dependencies {
@@ -27,8 +28,8 @@ dependencies {
     implementation 'net.kyori:adventure-text-serializer-gson:4.9.2'
     implementation 'net.kyori:adventure-text-serializer-gson-legacy-impl:4.9.2'
 
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+    testCompileOnly 'junit:junit:4.13.2'
+    testRuntimeOnly 'org.junit.vintage:junit-vintage-engine:5.8.1'
 }
 
 test {
