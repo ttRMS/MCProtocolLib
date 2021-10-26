@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com.github.steveice10'
-version = '1.12.2-2'
+version = '1.17.1-TT-1'
 description = 'MCProtocolLib'
 
 repositories {
@@ -21,14 +21,14 @@ repositories {
 
 dependencies {
     implementation 'com.google.code.gson:gson:2.8.8'
-    implementation 'com.github.steveice10:opennbt:1.4'
-    implementation 'com.github.steveice10:packetlib:2.0'
+    implementation 'com.github.GeyserMC:opennbt:1.4'
+    implementation 'com.github.GeyserMC:packetlib:2.0'
     implementation 'com.github.GeyserMC:MCAuthLib:cf0d4e3200'
     implementation 'net.kyori:adventure-text-serializer-gson:4.9.2'
     implementation 'net.kyori:adventure-text-serializer-gson-legacy-impl:4.9.2'
 
-    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
-    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
 }
 
 test {
