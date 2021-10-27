@@ -17,7 +17,7 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.8'
     implementation 'com.github.GeyserMC:opennbt:1.4'
     implementation 'com.github.GeyserMC:packetlib:1.4'
-    implementation 'com.github.GeyserMC:MCAuthLib:cf0d4e3200'
+    implementation 'com.github.tycrek:MCAuthLib:1.5-tycrek-1'
     testImplementation 'junit:junit:4.13.2'
 }
 

@@ -12,6 +12,7 @@ import java.util.List;
 /**
  * Automatically signs in with either Mojang or Microsoft authentication
  */
+@Deprecated
 public class AutoAuthenticationService extends AuthenticationService {
     private final MojangAuthenticationService mojangAuth;
     private final MsaAuthenticationService msaAuth;
