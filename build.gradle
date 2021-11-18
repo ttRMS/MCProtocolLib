@@ -1,11 +1,12 @@
 plugins {
     id 'java'
+    id 'maven-publish'
     id 'com.github.johnrengelman.shadow' version '7.1.0'
     id 'io.freefair.lombok' version '6.2.0'
 }
 
 group = 'com.github.steveice10'
-version = '1.17.1-TT-2'
+version = '1.17.1-TT-3'
 description = 'MCProtocolLib'
 
 repositories {
@@ -21,10 +22,10 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.google.code.gson:gson:2.8.8'
+    implementation 'com.google.code.gson:gson:2.8.9'
     implementation 'com.github.GeyserMC:opennbt:1.4'
     implementation 'com.github.GeyserMC:packetlib:2.0'
-    implementation 'com.github.GeyserMC:MCAuthLib:cf0d4e3200'
+    implementation 'com.github.tycrek:MCAuthLib:1.5-tycrek-15'
     implementation 'net.kyori:adventure-text-serializer-gson:4.9.2'
     implementation 'net.kyori:adventure-text-serializer-gson-legacy-impl:4.9.2'
 
@@ -38,4 +39,12 @@ test {
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
 }
