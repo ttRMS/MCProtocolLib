@@ -216,6 +216,7 @@ public class MagicValues {
         register(SpreadItemParam.RIGHT_MOUSE_BEGIN_DRAG, 4);
         register(SpreadItemParam.RIGHT_MOUSE_ADD_SLOT, 5);
         register(SpreadItemParam.RIGHT_MOUSE_END_DRAG, 6);
+        register(SpreadItemParam.RIGHT_MOUSE_END_DRAG, 12); // ttRMS Potential fix for future FastLatency Module
 
         register(FillStackParam.FILL, 0);
 
