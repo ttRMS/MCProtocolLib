@@ -2,7 +2,6 @@ package com.github.steveice10.mc.protocol;
 
 import com.github.steveice10.mc.auth.data.GameProfile;
 import com.github.steveice10.mc.auth.exception.request.RequestException;
-import com.github.steveice10.mc.auth.service.AuthenticationService;
 import com.github.steveice10.mc.protocol.data.SubProtocol;
 import com.github.steveice10.mc.protocol.packet.handshake.client.HandshakePacket;
 import com.github.steveice10.mc.protocol.packet.ingame.client.ClientChatPacket;
@@ -190,7 +189,8 @@ public class MinecraftProtocol extends PacketProtocol {
     private MinecraftProtocol(String username, String clientToken, String using, boolean token, Proxy authProxy) throws RequestException {
         this(SubProtocol.LOGIN);
 
-        AuthenticationService auth = new AutoAuthenticationService(clientToken); // TTRMS
+        // ttRMS (this entire comment since AuthService can't be instantiated with latest AuthLib)
+        /*AuthenticationService auth = new AuthenticationService(clientToken);
         auth.setUsername(username);
         if(token) {
             auth.setAccessToken(using);
@@ -200,8 +200,8 @@ public class MinecraftProtocol extends PacketProtocol {
 
         auth.login();
         this.profile = auth.getSelectedProfile();
-        //this.clientToken =  auth.getClientToken(); // TTRMS
-        this.accessToken = auth.getAccessToken();
+        this.clientToken =  auth.getClientToken();
+        this.accessToken = auth.getAccessToken();*/
     }
 
     public MinecraftProtocol(GameProfile profile, String clientToken, String accessToken) {
