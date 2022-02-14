@@ -1,29 +1,25 @@
 plugins {
     id 'java'
     id 'maven-publish'
-    id 'com.github.johnrengelman.shadow' version '7.1.0'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
 }
 
 repositories {
     mavenLocal()
-    maven {
-        url = uri('https://jitpack.io')
-    }
-    maven {
-        url = uri('https://repo.maven.apache.org/maven2/')
-    }
+    maven { url = uri('https://jitpack.io') }
+    maven { url = uri('https://repo.maven.apache.org/maven2/') }
 }
 
 dependencies {
     implementation 'com.google.code.gson:gson:2.8.8'
     implementation 'com.github.GeyserMC:opennbt:1.4'
-    implementation 'com.github.GeyserMC:packetlib:1.4'
+    implementation 'com.github.GeyserMC:packetlib:2.0'
     implementation 'com.github.tycrek:MCAuthLib:2.3'
     testImplementation 'junit:junit:4.13.2'
 }
 
 group = 'com.github.steveice10'
-version = '1.12.2-TT-3'
+version = '1.12.2-TT-4-SNAPSHOT'
 description = 'MCProtocolLib'
 
 tasks.withType(JavaCompile) {
