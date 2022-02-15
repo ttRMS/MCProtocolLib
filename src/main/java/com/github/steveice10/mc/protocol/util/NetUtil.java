@@ -5,11 +5,7 @@ import com.github.steveice10.mc.protocol.data.game.chunk.BlockStorage;
 import com.github.steveice10.mc.protocol.data.game.chunk.Chunk;
 import com.github.steveice10.mc.protocol.data.game.chunk.Column;
 import com.github.steveice10.mc.protocol.data.game.chunk.NibbleArray3d;
-import com.github.steveice10.mc.protocol.data.game.entity.metadata.EntityMetadata;
-import com.github.steveice10.mc.protocol.data.game.entity.metadata.ItemStack;
-import com.github.steveice10.mc.protocol.data.game.entity.metadata.MetadataType;
-import com.github.steveice10.mc.protocol.data.game.entity.metadata.Position;
-import com.github.steveice10.mc.protocol.data.game.entity.metadata.Rotation;
+import com.github.steveice10.mc.protocol.data.game.entity.metadata.*;
 import com.github.steveice10.mc.protocol.data.game.world.block.BlockFace;
 import com.github.steveice10.mc.protocol.data.game.world.block.BlockState;
 import com.github.steveice10.opennbt.NBTIO;
@@ -17,39 +13,34 @@ import com.github.steveice10.opennbt.tag.builtin.CompoundTag;
 import com.github.steveice10.packetlib.io.NetInput;
 import com.github.steveice10.packetlib.io.NetOutput;
 import com.github.steveice10.packetlib.io.stream.StreamNetInput;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class NetUtil {
     private static final int POSITION_X_SIZE = 38;
     private static final int POSITION_Y_SIZE = 26;
     private static final int POSITION_Z_SIZE = 38;
     private static final int POSITION_Y_SHIFT = 0xFFF;
     private static final int POSITION_WRITE_SHIFT = 0x3FFFFFF;
-    private NetUtil() {
-    }
 
     public static CompoundTag readNBT(NetInput in) throws IOException {
         byte b = in.readByte();
-        if(b == 0) {
-            return null;
-        } else {
-            return (CompoundTag) NBTIO.readTag(new NetInputStream(in, b));
-        }
+        return b == 0 ? null : (CompoundTag) NBTIO.readTag(new NetInputStream(in, b));
+
     }
 
     public static void writeNBT(NetOutput out, CompoundTag tag) throws IOException {
-        if(tag == null) {
-            out.writeByte(0);
-        } else {
-            NBTIO.writeTag(new NetOutputStream(out), tag);
-        }
+        if (tag == null) out.writeByte(0);
+        else NBTIO.writeTag(new NetOutputStream(out), tag);
     }
 
     public static BlockState readBlockState(NetInput in) throws IOException {
@@ -63,17 +54,12 @@ public class NetUtil {
 
     public static ItemStack readItem(NetInput in) throws IOException {
         short item = in.readShort();
-        if(item < 0) {
-            return null;
-        } else {
-            return new ItemStack(item, in.readByte(), in.readShort(), readNBT(in));
-        }
+        return item < 0 ? null : new ItemStack(item, in.readByte(), in.readShort(), readNBT(in));
     }
 
     public static void writeItem(NetOutput out, ItemStack item) throws IOException {
-        if(item == null) {
-            out.writeShort(-1);
-        } else {
+        if (item == null) out.writeShort(-1);
+        else {
             out.writeShort(item.getId());
             out.writeByte(item.getAmount());
             out.writeShort(item.getData());
@@ -110,163 +96,98 @@ public class NetUtil {
     }
 
     public static EntityMetadata[] readEntityMetadata(NetInput in) throws IOException {
-        List<EntityMetadata> ret = new ArrayList<EntityMetadata>();
+        var ret = new ArrayList<EntityMetadata>();
         int id;
-        while((id = in.readUnsignedByte()) != 255) {
+        while ((id = in.readUnsignedByte()) != 255) {
             int typeId = in.readVarInt();
-            MetadataType type = MagicValues.key(MetadataType.class, typeId);
+            var type = MagicValues.key(MetadataType.class, typeId);
             Object value = null;
-            switch(type) {
-                case BYTE:
-                    value = in.readByte();
-                    break;
-                case INT:
-                    value = in.readVarInt();
-                    break;
-                case FLOAT:
-                    value = in.readFloat();
-                    break;
-                case STRING:
-                    value = in.readString();
-                    break;
-                case CHAT:
-                    value = in.readString();
-                    break;
-                case ITEM:
-                    value = readItem(in);
-                    break;
-                case BOOLEAN:
-                    value = in.readBoolean();
-                    break;
-                case ROTATION:
-                    value = readRotation(in);
-                    break;
-                case POSITION:
-                    value = readPosition(in);
-                    break;
-                case OPTIONAL_POSITION:
+            switch (type) {
+                case BYTE -> value = in.readByte();
+                case INT -> value = in.readVarInt();
+                case FLOAT -> value = in.readFloat();
+                case STRING, CHAT -> value = in.readString();
+                case ITEM -> value = readItem(in);
+                case BOOLEAN -> value = in.readBoolean();
+                case ROTATION -> value = readRotation(in);
+                case POSITION -> value = readPosition(in);
+                case OPTIONAL_POSITION -> {
                     boolean positionPresent = in.readBoolean();
-                    if(positionPresent) {
-                        value = readPosition(in);
-                    }
-
-                    break;
-                case BLOCK_FACE:
-                    value = MagicValues.key(BlockFace.class, in.readVarInt());
-                    break;
-                case OPTIONAL_UUID:
+                    if (positionPresent) value = readPosition(in);
+                }
+                case BLOCK_FACE -> value = MagicValues.key(BlockFace.class, in.readVarInt());
+                case OPTIONAL_UUID -> {
                     boolean uuidPresent = in.readBoolean();
-                    if(uuidPresent) {
-                        value = in.readUUID();
-                    }
-
-                    break;
-                case BLOCK_STATE:
-                    value = readBlockState(in);
-                    break;
-                case NBT_TAG:
-                    value = readNBT(in);
-                    break;
-                default:
-                    throw new IOException("Unknown metadata type id: " + typeId);
+                    if (uuidPresent) value = in.readUUID();
+                }
+                case BLOCK_STATE -> value = readBlockState(in);
+                case NBT_TAG -> value = readNBT(in);
+                default -> throw new IOException("Unknown metadata type id: " + typeId);
             }
 
             ret.add(new EntityMetadata(id, type, value));
         }
 
-        return ret.toArray(new EntityMetadata[ret.size()]);
+        return ret.toArray(new EntityMetadata[0]);
     }
 
     public static void writeEntityMetadata(NetOutput out, EntityMetadata[] metadata) throws IOException {
-        for(EntityMetadata meta : metadata) {
+        for (var meta : metadata) {
             out.writeByte(meta.getId());
             out.writeVarInt(MagicValues.value(Integer.class, meta.getType()));
-            switch(meta.getType()) {
-                case BYTE:
-                    out.writeByte((Byte) meta.getValue());
-                    break;
-                case INT:
-                    out.writeVarInt((Integer) meta.getValue());
-                    break;
-                case FLOAT:
-                    out.writeFloat((Float) meta.getValue());
-                    break;
-                case STRING:
-                case CHAT:
-                    out.writeString((String) meta.getValue());
-                    break;
-                case ITEM:
-                    writeItem(out, (ItemStack) meta.getValue());
-                    break;
-                case BOOLEAN:
-                    out.writeBoolean((Boolean) meta.getValue());
-                    break;
-                case ROTATION:
-                    writeRotation(out, (Rotation) meta.getValue());
-                    break;
-                case POSITION:
-                    writePosition(out, (Position) meta.getValue());
-                    break;
-                case OPTIONAL_POSITION:
+            switch (meta.getType()) {
+                case BYTE -> out.writeByte((Byte) meta.getValue());
+                case INT -> out.writeVarInt((Integer) meta.getValue());
+                case FLOAT -> out.writeFloat((Float) meta.getValue());
+                case STRING, CHAT -> out.writeString((String) meta.getValue());
+                case ITEM -> writeItem(out, (ItemStack) meta.getValue());
+                case BOOLEAN -> out.writeBoolean((Boolean) meta.getValue());
+                case ROTATION -> writeRotation(out, (Rotation) meta.getValue());
+                case POSITION -> writePosition(out, (Position) meta.getValue());
+                case OPTIONAL_POSITION -> {
                     out.writeBoolean(meta.getValue() != null);
-                    if(meta.getValue() != null) {
-                        writePosition(out, (Position) meta.getValue());
-                    }
-
-                    break;
-                case BLOCK_FACE:
-                    out.writeVarInt(MagicValues.value(Integer.class, (BlockFace) meta.getValue()));
-                    break;
-                case OPTIONAL_UUID:
+                    if (meta.getValue() != null) writePosition(out, (Position) meta.getValue());
+                }
+                case BLOCK_FACE -> out.writeVarInt(MagicValues.value(Integer.class, meta.getValue()));
+                case OPTIONAL_UUID -> {
                     out.writeBoolean(meta.getValue() != null);
-                    if(meta.getValue() != null) {
-                        out.writeUUID((UUID) meta.getValue());
-                    }
-
-                    break;
-                case BLOCK_STATE:
-                    writeBlockState(out, (BlockState) meta.getValue());
-                    break;
-                case NBT_TAG:
-                    writeNBT(out, (CompoundTag) meta.getValue());
-                    break;
-                default:
-                    throw new IOException("Unknown metadata type: " + meta.getType());
+                    if (meta.getValue() != null) out.writeUUID((UUID) meta.getValue());
+                }
+                case BLOCK_STATE -> writeBlockState(out, (BlockState) meta.getValue());
+                case NBT_TAG -> writeNBT(out, (CompoundTag) meta.getValue());
+                default -> throw new IOException("Unknown metadata type: " + meta.getType());
             }
         }
 
         out.writeByte(255);
     }
 
-    public static Column readColumn(byte data[], int x, int z, boolean fullChunk, boolean hasSkylight, int mask, CompoundTag[] tileEntities) throws IOException {
+    public static Column readColumn(byte[] data, int x, int z, boolean fullChunk, boolean hasSkylight, int mask, CompoundTag[] tileEntities) throws IOException {
         NetInput in = new StreamNetInput(new ByteArrayInputStream(data));
         Throwable ex = null;
         Column column = null;
         try {
             Chunk[] chunks = new Chunk[16];
-            for(int index = 0; index < chunks.length; index++) {
-                if((mask & (1 << index)) != 0) {
+            for (int index = 0; index < chunks.length; index++)
+                if ((mask & (1 << index)) != 0) {
                     BlockStorage blocks = new BlockStorage(in);
                     NibbleArray3d blocklight = new NibbleArray3d(in, 2048);
                     NibbleArray3d skylight = hasSkylight ? new NibbleArray3d(in, 2048) : null;
                     chunks[index] = new Chunk(blocks, blocklight, skylight);
                 }
-            }
 
-            byte biomeData[] = null;
-            if(fullChunk) {
-                biomeData = in.readBytes(256);
-            }
+            byte[] biomeData = null;
+            if (fullChunk) biomeData = in.readBytes(256);
 
             column = new Column(x, z, chunks, biomeData, tileEntities);
-        } catch(Throwable e) {
+        } catch (Throwable e) {
             ex = e;
         }
 
         // Unfortunately, this is needed to detect whether the chunks contain skylight or not.
-        if((in.available() > 0 || ex != null) && !hasSkylight) {
+        if ((in.available() > 0 || ex != null) && !hasSkylight) {
             return readColumn(data, x, z, fullChunk, true, mask, tileEntities);
-        } else if(ex != null) {
+        } else if (ex != null) {
             ex.printStackTrace(); // TTRMS
             throw new IOException("Failed to read chunk data.", ex);
         }
@@ -276,53 +197,38 @@ public class NetUtil {
 
     public static int writeColumn(NetOutput out, Column column, boolean fullChunk, boolean hasSkylight) throws IOException {
         int mask = 0;
-        Chunk chunks[] = column.getChunks();
-        for(int index = 0; index < chunks.length; index++) {
+        Chunk[] chunks = column.getChunks();
+        for (int index = 0; index < chunks.length; index++) {
             Chunk chunk = chunks[index];
-            if(chunk != null && (!fullChunk || !chunk.isEmpty())) {
+            if (chunk != null && (!fullChunk || !chunk.isEmpty())) {
                 mask |= 1 << index;
                 chunk.getBlocks().write(out);
                 chunk.getBlockLight().write(out);
-                if(hasSkylight) {
-                    chunk.getSkyLight().write(out);
-                }
+                if (hasSkylight) chunk.getSkyLight().write(out);
             }
         }
-
-        if(fullChunk) {
-            out.writeBytes(column.getBiomeData());
-        }
-
+        if (fullChunk) out.writeBytes(column.getBiomeData());
         return mask;
     }
 
+    @RequiredArgsConstructor
     private static class NetInputStream extends InputStream {
-        private NetInput in;
+        private final NetInput in;
+        private final byte firstByte;
         private boolean readFirst;
-        private byte firstByte;
-
-        public NetInputStream(NetInput in, byte firstByte) {
-            this.in = in;
-            this.firstByte = firstByte;
-        }
 
         @Override
         public int read() throws IOException {
-            if(!this.readFirst) {
+            if (!this.readFirst) {
                 this.readFirst = true;
                 return this.firstByte;
-            } else {
-                return this.in.readUnsignedByte();
-            }
+            } else return this.in.readUnsignedByte();
         }
     }
 
+    @RequiredArgsConstructor
     private static class NetOutputStream extends OutputStream {
-        private NetOutput out;
-
-        public NetOutputStream(NetOutput out) {
-            this.out = out;
-        }
+        private final NetOutput out;
 
         @Override
         public void write(int b) throws IOException {
