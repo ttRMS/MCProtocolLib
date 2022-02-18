@@ -20,7 +20,7 @@ dependencies {
 }
 
 group = 'com.github.steveice10'
-version = '1.12.2-TT-5-SNAPSHOT'
+version = '1.12.2-TT-5'
 description = 'MCProtocolLib'
 
 tasks.withType(JavaCompile) {
