@@ -48,7 +48,7 @@ public class MinecraftProtocol extends PacketProtocol {
     private SubProtocol subProtocol = SubProtocol.HANDSHAKE;
     private PacketHeader header = new DefaultPacketHeader();
     private AESEncryption encrypt;
-
+    private SubProtocol targetSubProtocol;
     private GameProfile profile;
     private String clientToken = "";
     private String accessToken = "";
@@ -57,7 +57,7 @@ public class MinecraftProtocol extends PacketProtocol {
         if (subProtocol != SubProtocol.LOGIN && subProtocol != SubProtocol.STATUS)
             throw new IllegalArgumentException("Only login and status modes are permitted.");
 
-        this.subProtocol = subProtocol;
+        this.targetSubProtocol = subProtocol;
         if (subProtocol == SubProtocol.LOGIN) this.profile = new GameProfile((UUID) null, "Player");
     }
 
@@ -142,7 +142,7 @@ public class MinecraftProtocol extends PacketProtocol {
         }
 
         this.setSubProtocol(this.subProtocol, true);
-        session.addListener(new ClientListener());
+        session.addListener(new ClientListener(this.targetSubProtocol));
     }
 
     @Override
